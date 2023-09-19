@@ -3,50 +3,31 @@ import UserModel from "../models/users";
 import { StatusCodes } from "http-status-codes";
 import BadRequestError from "../errors/badRequest";
 import Unauthenticated from "../errors/unauthenticated";
+import {
+  createUserService,
+  loginUserService,
+} from "../services/users/userService.ts";
+import {
+  TLoginResponse,
+  TRegistrationResponse,
+} from "../interfaces/user.interface";
 
-const register = async (req: Request, res: Response): Promise<Response> => {
-  const newUser = await UserModel.create(req.body);
-  const token = newUser.createJWT();
+const register = async (
+  req: Request,
+  res: Response
+): Promise<Response<TRegistrationResponse>> => {
+  const newUser = await createUserService(req.body);
 
-  return res.status(200).json({
-    user: {
-      name: newUser.name,
-      email: newUser.email,
-      token,
-    },
-  });
+  return res.status(200).json({ newUser });
 };
 
-export const login = async (req: Request, res: Response): Promise<Response> => {
-  const { email, password } = req.body;
+export const login = async (
+  req: Request,
+  res: Response
+): Promise<Response<TLoginResponse>> => {
+  const user = await loginUserService(req.body);
 
-  // MISSING FIELDS
-  if (!email || !password) {
-    throw new BadRequestError("Please provide email and password");
-  }
-
-  const user = await UserModel.findOne({ email });
-
-  // NO USER FOUND
-  if (!user) {
-    throw new Unauthenticated(`Invalid Credentials`);
-  }
-
-  // COMPARE PASSWORDS
-  const isPasswordCorrect = await user.comparePassword(password);
-  if (!isPasswordCorrect) {
-    throw new Unauthenticated("Invalid Credentials");
-  }
-
-  const token = user.createJWT();
-
-  return res.status(StatusCodes.OK).json({
-    user: {
-      email: user.email,
-      name: user.name,
-      token,
-    },
-  });
+  return res.status(StatusCodes.OK).json({ user });
 };
 
 export { register };
