@@ -13,11 +13,9 @@ export type TUserRegistrationRequest = {
 };
 
 export type TRegistrationResponse = {
-  user: {
-    name: string;
-    email: string;
-    token: string;
-  };
+  name: string;
+  email: string;
+  token: string;
 };
 
 export type TLoginRequest = {
@@ -26,9 +24,7 @@ export type TLoginRequest = {
 };
 
 export type TLoginResponse = {
-  user: {
-    name: string;
-    email: string;
-    token: string;
-  };
+  name: string;
+  email: string;
+  token: string;
 };
