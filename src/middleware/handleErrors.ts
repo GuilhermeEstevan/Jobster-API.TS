@@ -22,6 +22,13 @@ export const handleErrors = (
     customError.statusCode = 404;
   }
 
+    if (error.name === "ValidationError") {
+      customError.msg = Object.values(error.errors)
+        .map((item: any) => item.message)
+        .join(",");
+      customError.statusCode = 400;
+    }
+
   // return res.status(customError.statusCode).json(error);
   return res.status(customError.statusCode).json(customError.msg);
 };

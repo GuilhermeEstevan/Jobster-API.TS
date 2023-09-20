@@ -3,18 +3,11 @@ import Unauthenticated from "../errors/unauthenticated";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import AppError from "../errors/app.error";
 
-interface CustomRequest extends Request {
-  user?: {
-    userId: string;
-    name: string;
-  };
-}
-
 const authorizationMiddleware = (
-  req: CustomRequest,
+  req: Request,
   res: Response,
   next: NextFunction
-) => {
+): void => {
   //Check for auth
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -29,10 +22,13 @@ const authorizationMiddleware = (
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
-    req.user = {
+
+    res.locals = {
       userId: payload.userId,
       name: payload.name,
     };
+  
+    
     next();
   } catch (error) {
     console.log(error);

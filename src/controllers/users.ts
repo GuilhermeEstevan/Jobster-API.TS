@@ -12,7 +12,6 @@ const register = async (
   res: Response
 ): Promise<Response<TRegistrationResponse>> => {
   const user = await createUserService(req.body);
-  console.log(user);
 
   return res.status(200).json({ user });
 };

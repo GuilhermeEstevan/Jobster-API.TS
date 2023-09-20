@@ -1,106 +1,62 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import JobsModel from "../models/jobs";
-import Unauthenticated from "../errors/unauthenticated";
-import { NotFound } from "../errors/notFound";
-import BadRequestError from "../errors/badRequest";
-
-interface CustomRequest extends Request {
-  user?: {
-    userId: string;
-    name: string;
-  };
-}
+import { createJobService } from "../services/jobs/createJob";
+import { IQueryParams, TJobResponse } from "../interfaces/job.interface";
+import { getAllJobsService } from "../services/jobs/getAllJobs";
+import { getSingleJobService } from "../services/jobs/getSingleJob";
+import { deleteJobService } from "../services/jobs/deleteJob";
+import { editJobService } from "../services/jobs/editJob";
 
 const createJob = async (
-  req: CustomRequest,
+  req: Request,
   res: Response
-): Promise<Response> => {
-  req.body.createdBy = req.user?.userId;
-  const newJob = await JobsModel.create(req.body);
+): Promise<Response<TJobResponse>> => {
+  const { userId } = res.locals;
+  const job = await createJobService(req.body, userId);
+  console.log(job);
 
-  return res
-    .status(StatusCodes.CREATED)
-    .json({ message: "created job", job: newJob });
+  return res.status(StatusCodes.CREATED).json({ job });
 };
 
 const getAllJobs = async (
-  req: CustomRequest,
+  req: Request,
   res: Response
-): Promise<Response> => {
-  if (!req.user) throw new Unauthenticated("Authentication invalid!");
-
-  const { userId } = req.user;
-
-  const jobs = await JobsModel.find({ createdBy: userId }).sort("createdAt");
-  return res.status(StatusCodes.OK).json({ jobs, totalJobs: jobs.length });
+): Promise<Response<TJobResponse[]>> => {
+  const { userId } = res.locals;
+  const query = req.query as IQueryParams
+  const jobs = await getAllJobsService(userId, query);
+  const totalJobs = jobs?.length;
+  return res.status(StatusCodes.OK).json({ jobs, totalJobs });
 };
 
 // ID PARAMS
 
-const getSingleJob = async (
-  req: CustomRequest,
-  res: Response
-): Promise<Response> => {
-  if (!req.user) throw new Unauthenticated("Authentication invalid!");
-
-  const { userId } = req.user;
+const getSingleJob = async (req: Request, res: Response): Promise<Response> => {
+  const { userId } = res.locals;
   const { id: jobId } = req.params;
-  const job = await JobsModel.findOne({ _id: jobId, createdBy: userId });
-
-  if (!job) {
-    throw new NotFound(`No job with id ${jobId}`);
-  }
+  const job = await getSingleJobService(userId, jobId);
 
   return res.status(StatusCodes.OK).json({ job });
 };
 
 const deleteJob = async (
-  req: CustomRequest,
+  req: Request,
   res: Response
-): Promise<Response> => {
-  if (!req.user) throw new Unauthenticated("Authentication invalid!");
-
-  const { userId } = req.user;
+): Promise<Response<void>> => {
+  const { userId } = res.locals;
   const { id: jobId } = req.params;
-  const jobToDelete = await JobsModel.findOneAndDelete({
-    _id: jobId,
-    createdBy: userId,
-  });
+  await deleteJobService(userId, jobId);
 
-  if (!jobToDelete) {
-    throw new NotFound(`No job with id ${jobId}`);
-  }
-
-  return res
-    .status(StatusCodes.OK)
-    .json({ message: "job deleted", jobToDelete });
+  return res.status(StatusCodes.OK).send();
 };
 
-const editJob = async (
-  req: CustomRequest,
-  res: Response
-): Promise<Response> => {
-  if (!req.user) throw new Unauthenticated("Authentication invalid!");
-
-  const { userId } = req.user;
+const editJob = async (req: Request, res: Response): Promise<Response> => {
+  const { userId } = res.locals;
   const { id: jobId } = req.params;
-  const { position, company } = req.body;
 
-  if (position === "" || company === "") {
-    throw new BadRequestError("Please provide position and company");
-  }
+  const job = await editJobService(req.body, userId, jobId);
 
-  const jobToEdit = await JobsModel.findOneAndUpdate(
-    {
-      _id: jobId,
-      createdBy: userId,
-    },
-    req.body,
-    { new: true, runValidators: true }
-  );
-
-  return res.status(StatusCodes.OK).json({ message: "edit job", jobToEdit });
+  return res.status(StatusCodes.OK).json({ job });
 };
 
 export { createJob, getAllJobs, getSingleJob, deleteJob, editJob };

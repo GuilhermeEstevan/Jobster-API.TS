@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, Types } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { JobsDocument } from "../interfaces/job.interface";
 
 const JobsSchema = new Schema<JobsDocument>(
@@ -31,6 +31,6 @@ const JobsSchema = new Schema<JobsDocument>(
   { timestamps: true }
 );
 
-const JobsModel = mongoose.model<JobsDocument>("/Job", JobsSchema);
+const JobsModel = mongoose.model<JobsDocument>("Job", JobsSchema);
 
 export default JobsModel;
