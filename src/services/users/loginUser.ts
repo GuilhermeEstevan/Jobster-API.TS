@@ -29,6 +29,8 @@ const loginUserService = async (
     name: user.name,
     email: user.email,
     token: user.createJWT(),
+    lastName: user.lastName,
+    local: user.local,
   };
 };
 

@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import AppError from "../errors/app.error";
@@ -17,6 +17,18 @@ const UserSchema = new Schema<UserDocument>({
   password: {
     type: String,
     required: true,
+  },
+  lastName: {
+    type: String,
+    default: "lastName",
+    minlength: 3,
+    maxlength: 16,
+  },
+  local: {
+    type: String,
+    minlength: 2,
+    maxlength: 16,
+    default: "My City",
   },
 });
 

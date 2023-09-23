@@ -14,6 +14,8 @@ const createUserService = async (
   const response: TRegistrationResponse = {
     name: user.name,
     email: user.email,
+    local: user.local,
+    lastName: user.lastName,
     token: user.createJWT(),
   };
 

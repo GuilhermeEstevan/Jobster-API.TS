@@ -7,6 +7,8 @@ export interface JobsDocument extends Document {
   createdBy: Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
+  jobType: string;
+  jobLocation: string;
 }
 
 export interface AuthenticatedUser {
@@ -18,6 +20,8 @@ export type TJobRequest = {
   company: string;
   position: string;
   status?: string;
+  jobType?: string;
+  jobLocation?: string;
 };
 
 export type TJobResponse = {
@@ -28,6 +32,14 @@ export type TJobResponse = {
   _id: Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
+  jobType: string;
+  jobLocation: string;
+};
+
+export type TGetAllJobsResponse = {
+  jobs: TJobResponse[] | null;
+  totalJobs: number;
+  numOfPages: number;
 };
 
 export interface IQueryParams {

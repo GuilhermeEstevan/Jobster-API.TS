@@ -2,6 +2,8 @@ export interface UserDocument extends Document {
   name: string;
   email: string;
   password: string;
+  lastName: string;
+  local: string;
   createJWT: () => string;
   comparePassword: (password: string) => boolean;
 }
@@ -15,6 +17,8 @@ export type TUserRegistrationRequest = {
 export type TRegistrationResponse = {
   name: string;
   email: string;
+  lastName: string;
+  local: string;
   token: string;
 };
 
@@ -26,5 +30,7 @@ export type TLoginRequest = {
 export type TLoginResponse = {
   name: string;
   email: string;
+  lastName: string;
+  local: string;
   token: string;
 };

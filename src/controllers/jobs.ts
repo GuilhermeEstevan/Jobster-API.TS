@@ -6,6 +6,7 @@ import { getAllJobsService } from "../services/jobs/getAllJobs";
 import { getSingleJobService } from "../services/jobs/getSingleJob";
 import { deleteJobService } from "../services/jobs/deleteJob";
 import { editJobService } from "../services/jobs/editJob";
+import { getStats } from "../services/jobs/getStats";
 
 const createJob = async (
   req: Request,
@@ -23,10 +24,9 @@ const getAllJobs = async (
   res: Response
 ): Promise<Response<TJobResponse[]>> => {
   const { userId } = res.locals;
-  const query = req.query as IQueryParams
-  const jobs = await getAllJobsService(userId, query);
-  const totalJobs = jobs?.length;
-  return res.status(StatusCodes.OK).json({ jobs, totalJobs });
+  const query = req.query as IQueryParams;
+  const data = await getAllJobsService(userId, query);
+  return res.status(StatusCodes.OK).json(data);
 };
 
 // ID PARAMS
@@ -60,3 +60,10 @@ const editJob = async (req: Request, res: Response): Promise<Response> => {
 };
 
 export { createJob, getAllJobs, getSingleJob, deleteJob, editJob };
+
+export const showStats = async (req: Request, res: Response) => {
+  const { userId } = res.locals;
+  const stats = await getStats(userId);
+
+  res.status(StatusCodes.OK).json(stats);
+};
