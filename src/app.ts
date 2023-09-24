@@ -6,10 +6,13 @@ import { handleErrors } from "./middleware";
 import jobsRoutes from "./routes/jobs";
 import authorizationMiddleware from "./middleware/authorization";
 import { noRoutes } from "./middleware/noRoutes";
+import cors from "cors";
 dotenv.config();
 
 const app: Application = express();
 app.use(express.json());
+
+app.use(cors({ origin: "http://localhost:5000" }));
 
 // Routes
 app.use("/api/v1/auth", usersRoutes);

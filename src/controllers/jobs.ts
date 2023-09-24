@@ -65,5 +65,6 @@ export const showStats = async (req: Request, res: Response) => {
   const { userId } = res.locals;
   const stats = await getStats(userId);
 
+ 
   res.status(StatusCodes.OK).json(stats);
 };

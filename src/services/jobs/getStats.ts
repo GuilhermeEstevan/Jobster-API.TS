@@ -19,7 +19,7 @@ const getStats = async (userId: string) => {
     { $group: { _id: "$status", count: { $sum: 1 } } },
   ]);
 
-  console.log(stats);
+  // console.log(stats);
 
   const statsObject = stats.reduce((acc, current) => {
     const { _id: title, count } = current;
@@ -37,7 +37,7 @@ const getStats = async (userId: string) => {
 
   // MONTHLY APPLICATION
 
-  let monthlyApplication = await JobsModel.aggregate([
+  let monthlyApplications = await JobsModel.aggregate([
     { $match: { createdBy: new mongoose.Types.ObjectId(userId) } },
     {
       $group: {
@@ -49,7 +49,7 @@ const getStats = async (userId: string) => {
     { $limit: 6 },
   ]);
 
-  monthlyApplication = monthlyApplication
+  monthlyApplications = monthlyApplications
     .map((item) => {
       const {
         _id: { year, month },
@@ -63,9 +63,9 @@ const getStats = async (userId: string) => {
     })
     .reverse();
 
-  console.log(monthlyApplication);
+  // console.log(monthlyApplication);
 
-  return { defaultStats, monthlyApplication };
+  return { defaultStats, monthlyApplications };
 };
 
 export { getStats };

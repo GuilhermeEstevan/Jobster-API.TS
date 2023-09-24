@@ -16,13 +16,14 @@ const register = async (
   return res.status(200).json({ user });
 };
 
-export const login = async (
+const login = async (
   req: Request,
   res: Response
 ): Promise<Response<TLoginResponse>> => {
   const user = await loginUserService(req.body);
+  console.log(user);
 
   return res.status(StatusCodes.OK).json({ user });
 };
 
-export { register };
+export { register, login };
