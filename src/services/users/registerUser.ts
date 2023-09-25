@@ -9,8 +9,6 @@ const createUserService = async (
 ): Promise<TRegistrationResponse> => {
   const user = await UserModel.create(Data);
 
-  // console.log(newUser);
-
   const response: TRegistrationResponse = {
     name: user.name,
     email: user.email,

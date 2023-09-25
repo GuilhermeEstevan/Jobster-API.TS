@@ -4,8 +4,10 @@ import { createUserService } from "../services/users/registerUser";
 import {
   TLoginResponse,
   TRegistrationResponse,
+  TUpdateResponse,
 } from "../interfaces/user.interface";
 import { loginUserService } from "../services/users/loginUser";
+import updateUserService from "../services/users/updateUser";
 
 const register = async (
   req: Request,
@@ -26,4 +28,14 @@ const login = async (
   return res.status(StatusCodes.OK).json({ user });
 };
 
-export { register, login };
+const updateUser = async (
+  req: Request,
+  res: Response
+): Promise<Response<TUpdateResponse>> => {
+  const { userId } = res.locals;
+  const user = await updateUserService(req.body, userId);
+  console.log(user);
+  return res.status(StatusCodes.OK).json({ user });
+};
+
+export { register, login, updateUser };

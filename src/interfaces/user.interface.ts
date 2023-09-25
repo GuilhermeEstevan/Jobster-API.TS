@@ -34,3 +34,18 @@ export type TLoginResponse = {
   local: string;
   token: string;
 };
+
+export type TUpdateRequest = {
+  name: string;
+  email: string;
+  lastName: string;
+  local: string;
+};
+
+export type TUpdateResponse = {
+  name: string;
+  email: string;
+  lastName: string;
+  local: string;
+  token: string;
+};
