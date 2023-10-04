@@ -29,6 +29,6 @@ export const handleErrors = (
       customError.statusCode = 400;
     }
 
-  // return res.status(customError.statusCode).json(error);
+  // return res.status(customError.statusCode).json(error); 
   return res.status(customError.statusCode).json(customError.msg);
 };

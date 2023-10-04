@@ -27,7 +27,7 @@ const JobsSchema = new Schema<JobsDocument>(
     },
     jobType: {
       type: String,
-      enum: ["integral", "remoto", "meio periodo", "estagio"],
+      enum: ["integral", "remoto", "meio período", "estágio"],
       default: "integral",
     },
     jobLocation: {

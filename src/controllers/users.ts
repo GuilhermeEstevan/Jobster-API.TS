@@ -33,6 +33,8 @@ const updateUser = async (
   res: Response
 ): Promise<Response<TUpdateResponse>> => {
   const { userId } = res.locals;
+  console.log(userId);
+
   const user = await updateUserService(req.body, userId);
   console.log(user);
   return res.status(StatusCodes.OK).json({ user });

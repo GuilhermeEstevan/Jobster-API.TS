@@ -20,11 +20,11 @@ const getAllJobsService = async (
     queryObject.position = { $regex: search, $options: "i" };
   }
 
-  if (status && status != "all") {
+  if (status && status != "todos") {
     queryObject.status = status;
   }
 
-  if (jobType && status != "all") {
+  if (jobType && jobType != "todos") {
     queryObject.jobType = jobType;
   }
 
@@ -33,11 +33,11 @@ const getAllJobsService = async (
   let result = JobsModel.find(queryObject);
 
   // SORT
-  if (sort === "latest") {
+  if (sort === "mais recente") {
     result.sort("-createdAt");
   }
 
-  if (sort === "oldest") {
+  if (sort === "mais antigo") {
     result.sort("createdAt");
   }
 

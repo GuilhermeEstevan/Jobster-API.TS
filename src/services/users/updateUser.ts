@@ -12,6 +12,10 @@ const updateUserService = async (Data: TUpdateRequest, userId: string) => {
     throw new BadRequestError("Please provide all values");
   }
 
+  if (local.length < 2 || local.length > 16) {
+    throw new BadRequestError("O local deve ter entre 2 e 16 caracteres");
+  }
+
   const user = await UserModel.findOne({ _id: userId });
 
   if (!user) {
