@@ -7,12 +7,28 @@ import jobsRoutes from "./routes/jobs";
 import authorizationMiddleware from "./middleware/authorization";
 import { noRoutes } from "./middleware/noRoutes";
 import cors from "cors";
+import helmet from "helmet";
 dotenv.config();
 
 const app: Application = express();
 app.use(express.json());
 
-app.use(cors({ origin: "http://localhost:5173" }));
+// CORS
+app.use(
+  cors({
+    origin: ["https://jobster-ts.netlify.app/", "http://localhost:5173"],
+    optionsSuccessStatus: 200,
+  })
+);
+app.options("*", cors());
+
+// HELMET
+app.use(helmet());
+
+// DOCS LINK
+app.get("/", (req, res) => {
+  res.send('<h1>Jobs API</h1><a href="/docs-api">Documentation</a>');
+});
 
 // Routes
 app.use("/api/v1/auth", usersRoutes);
