@@ -17,11 +17,13 @@ app.use(express.json());
 app.use(
   cors({
     origin: [
-      "https://jobster-ts.netlify.app/",
+      "https://jobster-ts.netlify.app",
       "https://jobster-api-ydds.onrender.com",
       "http://localhost:5173",
     ],
     optionsSuccessStatus: 200,
+    methods: "GET,HEAD,PATCH,POST,DELETE",
+    allowedHeaders: "Content-Type,Authorization",
   })
 );
 app.options("*", cors());
