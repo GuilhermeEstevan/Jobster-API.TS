@@ -8,10 +8,15 @@ import authorizationMiddleware from "./middleware/authorization";
 import { noRoutes } from "./middleware/noRoutes";
 import cors from "cors";
 import helmet from "helmet";
+import swaggerUi from "swagger-ui-express";
+import swaggerDocument from "../swagger.json";
+
 dotenv.config();
 
 const app: Application = express();
 app.use(express.json());
+
+// SWAGGER
 
 // CORS
 app.use(
@@ -33,9 +38,10 @@ app.use(helmet());
 
 // DOCS LINK
 app.get("/", (req, res) => {
-  res.send('<h1>Jobs API</h1><a href="/docs-api">Documentation</a>');
+  res.send('<h1>Jobs API</h1><a href="/swagger">Documentation</a>');
 });
 
+app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // Routes
 app.use("/api/v1/auth", usersRoutes);
 app.use("/api/v1/jobs", authorizationMiddleware, jobsRoutes);
